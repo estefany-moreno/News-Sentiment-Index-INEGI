@@ -7,7 +7,7 @@ on:
   # Si tu zona cambia por DST, ajusta estas horas.
   schedule:
     - cron: "0 18 * * *"
-    - cron: "5 19 * * *"
+    - cron: "16 19 * * *"
     - cron: "30 4 * * *"
   workflow_dispatch:
 
