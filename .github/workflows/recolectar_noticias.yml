@@ -7,11 +7,12 @@ on:
   # Si tu zona cambia por DST, ajusta estas horas.
   schedule:
     - cron: "0 18 * * *"
+    - cron: "5 19 * * *"
     - cron: "30 4 * * *"
   workflow_dispatch:
 
 jobs:
-  recolectar:
+  recolectar_el_economista:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +29,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Ejecutar script de recolección
+      - name: Ejecutar script de recolección (El Economista)
         env:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
