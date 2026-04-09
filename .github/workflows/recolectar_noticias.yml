@@ -1,0 +1,92 @@
+name: Recolectar Noticias
+
+on:
+  # GitHub Actions usa cron en UTC.
+  # 12:00 PM Monterrey (UTC-6)  -> 18:00 UTC
+  # 10:30 PM Monterrey (UTC-6)  -> 04:30 UTC (día siguiente)
+  # Si tu zona cambia por DST, ajusta estas horas.
+  schedule:
+    - cron: "0 18 * * *"
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+
+jobs:
+  recolectar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar script de recolección
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          DRIVE_FOLDER_ID_EL_ECONOMISTA: ${{ secrets.DRIVE_FOLDER_ID_EL_ECONOMISTA }}
+        run: python Noticias_ElEconomista.py
+
+      - name: Mostrar resumen
+        if: always()
+        run: echo "Ejecución terminada"
+
+  recolectar_reforma:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar script de recolección (Reforma)
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          DRIVE_FOLDER_ID_REFORMA: ${{ secrets.DRIVE_FOLDER_ID_REFORMA }}
+        run: python Noticias_Reforma.py
+
+  recolectar_databursatil:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar script de recolección (DataBursatil)
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          DRIVE_FOLDER_ID_DATABURSATIL: ${{ secrets.DRIVE_FOLDER_ID_DATABURSATIL }}
+          DATABURSATIL_TOKEN: ${{ secrets.DATABURSATIL_TOKEN }}
+        run: python Noticias_DataBursatil.py

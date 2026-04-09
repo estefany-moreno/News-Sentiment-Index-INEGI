@@ -1,0 +1,10 @@
+.DS_Store
+Noticias_RSS/
+Noticias_APIs/
+all_requirements.txt
+# Secrets (no versionar)
+../Secrets/
+**/Secrets/
+**/*token*.txt
+**/oauth_secrets.txt
+**/client_secret*.json

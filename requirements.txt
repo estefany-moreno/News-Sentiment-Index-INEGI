@@ -1,0 +1,6 @@
+requests==2.33.1
+feedparser==6.0.12
+pandas==3.0.2
+google-auth==2.49.1
+google-api-python-client==2.193.0
+google-auth-httplib2==0.3.1
