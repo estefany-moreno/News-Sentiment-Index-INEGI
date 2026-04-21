@@ -5,11 +5,13 @@ on:
   # 12:00 PM Monterrey (UTC-6)  -> 18:00 UTC
   # 09:03 AM Monterrey (UTC-6)  -> 15:03 UTC, Actions tiene un retraso de 2.5 hrs o mayor para ejecutarse
   # 05:17 PM Monterrey (UTC-6)  -> 23:17 UTC
+  # 05:06 PM Monterrey (UTC-6)  -> 23:06 UTC
   # 10:30 PM Monterrey (UTC-6)  -> 04:30 UTC (día siguiente)
   # Si tu zona cambia por DST, ajusta estas horas.
   schedule:
     - cron: "3 15 * * *" 
     - cron: "17 23 * * *"
+    - cron: "6 23 * * *"
   workflow_dispatch:
 
 jobs:
