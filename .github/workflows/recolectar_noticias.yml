@@ -10,8 +10,10 @@ on:
   # 10:30 PM Monterrey (UTC-6)  -> 04:30 UTC (día siguiente)
   # Si tu zona cambia por DST, ajusta estas horas.
   schedule:
+    - cron: "7 12 * * *"
     - cron: "1 14 * * *"
     - cron: "3 15 * * *" 
+    - cron: "7 19 * * *"
     - cron: "2 22 * * *"
     - cron: "17 23 * * *"
     - cron: "6 23 * * *"
