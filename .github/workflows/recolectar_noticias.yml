@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  recolectar_el_economista:
+  recolectar_noticias:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,65 +37,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Ejecutar script de recolección (El Economista)
+      - name: Crear credentials.json
+        run: |
+          printf '%s' '${{ secrets.GOOGLE_CREDENTIALS_JSON }}' > credentials.json
+
+      - name: Ejecutar script de recolección unificada
         env:
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
-          DRIVE_FOLDER_ID_EL_ECONOMISTA: ${{ secrets.DRIVE_FOLDER_ID_EL_ECONOMISTA }}
-        run: python Noticias_ElEconomista.py
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/credentials.json
+          DATABURSATIL_TOKEN: ${{ secrets.DATABURSATIL_TOKEN }}
+        run: python Recoleccion_Noticias.py
 
       - name: Mostrar resumen
         if: always()
         run: echo "Ejecución terminada"
-
-  recolectar_reforma:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configurar Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Instalar dependencias
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Ejecutar script de recolección (Reforma)
-        env:
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
-          DRIVE_FOLDER_ID_REFORMA: ${{ secrets.DRIVE_FOLDER_ID_REFORMA }}
-        run: python Noticias_Reforma.py
-
-  recolectar_databursatil:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configurar Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Instalar dependencias
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Ejecutar script de recolección (DataBursatil)
-        env:
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
-          DRIVE_FOLDER_ID_DATABURSATIL: ${{ secrets.DRIVE_FOLDER_ID_DATABURSATIL }}
-          DATABURSATIL_TOKEN: ${{ secrets.DATABURSATIL_TOKEN }}
-        run: python Noticias_DataBursatil.py
