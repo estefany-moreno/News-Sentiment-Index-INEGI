@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 
 
 # Configuración general: diccionarios locales + Google Sheets de salida.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", os.path.join(os.path.dirname(os.path.abspath(__file__)), "credentials.json"))
 SHEET_KEY = "1KcqVvr-NxAhzYxfIBv3_TXMnQiWCXaq9NFm3z-Ff_Hc"
 HOJA_RAW = "noticias_raw"
@@ -42,17 +42,17 @@ def _cargar_diccionario(nombre: str, carpeta: str = "") -> set[str]:
 
 def cargar_diccionario_regiones() -> set[str]:
     """Carga los términos del diccionario de regiones (normalizados)."""
-    return _cargar_diccionario("diccionario_regiones_mexico.txt")
+    return _cargar_diccionario("diccionario_regiones_mexico.txt", "Diccionarios")
 
 
 def cargar_diccionario_entidades_indicadores() -> set[str]:
     """Carga los términos del diccionario de entidades e indicadores mexicanos (normalizados)."""
-    return _cargar_diccionario("diccionario_entidades_indicadores_mexicanos.txt")
+    return _cargar_diccionario("diccionario_entidades_indicadores_mexicanos.txt", "Diccionarios")
 
 
 def cargar_diccionario_economia() -> set[str]:
     """Carga los términos del diccionario de economía actualizado (normalizados)."""
-    return _cargar_diccionario("diccionario_economia_actualizado.txt", "RSS")
+    return _cargar_diccionario("diccionario_economia_actualizado.txt", "Diccionarios")
 
 
 def _palabras_normalizadas(texto: str, patron=PATRON_PALABRA) -> list[str]:
