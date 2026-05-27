@@ -1,7 +1,37 @@
 # Indicador de sentimiento en noticias económicas
 
-Pipeline automatizado para **recolectar**, **filtrar**, **clasificar** y **agregar** noticias de medios mexicanos, con el fin de construir un **índice de sentimiento** derivado del tono financiero del texto. Los resultados se almacenan en **Google Sheets** y el proceso puede ejecutarse de forma programada con **GitHub Actions**.
+## Contexto del proyecto
 
+Desarrollo en el marco del **índice de sentimiento derivado de noticias** (consultoría CIMAT / INEGI). El repositorio implementa la cadena operativa desde la fuente periodística hasta indicadores diarios y mensuales listos para análisis posterior.
+
+Este trabajo busca cuantificar de manera sistemática el tono de la cobertura mediática sobre temas económicos y financieros relacionados con México, combinando técnicas de **procesamiento de lenguaje natural en español**, modelos de **sentimiento especializados en finanzas** y una infraestructura reproducible basada en **Google Sheets** y **GitHub Actions**. El resultado es un insumo que puede integrarse en análisis econométricos, tableros de monitoreo y ejercicios de nowcasting, permitiendo estudiar cómo varía el clima informativo alrededor de la economía mexicana a través del tiempo y cómo se relaciona con otros indicadores oficiales producidos por el INEGI.
+
+
+El resultado es un pipeline automatizado para **recolectar**, **filtrar**, **clasificar** y **agregar** noticias de medios mexicanos, con el fin de construir un **índice de sentimiento** derivado del tono financiero del texto. Los resultados se almacenan en **Google Sheets** y el proceso puede ejecutarse de forma programada con **GitHub Actions**.
+
+---
+
+## Requisitos
+
+- **Python 3.12**
+- Cuenta de **Google Cloud** con API de Sheets habilitada y archivo de credenciales de cuenta de servicio
+- Token de **DataBursatil** (`DATABURSATIL_TOKEN`) para la API de noticias
+- Acceso de edición al libro de Google Sheets configurado en los scripts
+
+### Instalación
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Coloque `credentials.json` en la raíz del proyecto o defina:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/ruta/a/credentials.json"
+export DATABURSATIL_TOKEN="su_token"
+```
 ---
 
 ## Resumen del flujo
@@ -153,7 +183,7 @@ La columna `fuente` se estandariza a: *Axis Negocios*, *El Economista*, *Reforma
 
 **Archivo:** `Sentiment_Score.py`
 
-Clasifica el tono financiero de cada noticia usando el modelo **`bardsai/finance-sentiment-es-base`** (BERT en español orientado a finanzas).
+Clasifica el tono financiero de cada noticia usando el modelo **[`bardsai/finance-sentiment-es-base`](https://huggingface.co/bardsai/finance-sentiment-es-base)** (BERT en español orientado a finanzas).
 
 ### Etiquetas y scores
 
@@ -192,27 +222,6 @@ Agrega los `sentiment_score` en series temporales.
 
 ---
 
-## Estructura del repositorio
-
-```
-Recoleccion-Noticias-Automatizada/
-├── Recoleccion_Noticias.py      # Etapa 1: recolección
-├── Preprocesamiento_Noticias.py # Etapa 2: limpieza y tokens
-├── Sentiment_Score.py           # Etapa 3: clasificación
-├── Construccion_Indice.py       # Etapa 4: agregación
-├── Diccionarios/
-│   ├── diccionario_regiones_mexico.txt
-│   ├── diccionario_entidades_indicadores_mexicanos.txt
-│   └── diccionario_economia_actualizado.txt
-├── requirements.txt
-├── .github/workflows/
-│   ├── recolectar_noticias.yml  # Recolección programada
-│   └── indice_diario.yml        # Preproceso + sentimiento + índice (domingos)
-└── credentials.json             # No versionar (local o secret en Actions)
-```
-
----
-
 ## Diccionarios
 
 En `Diccionarios/` (rama `main`) están los tres listados de términos que usa `Recoleccion_Noticias.py` al filtrar noticias:
@@ -235,27 +244,7 @@ Para ampliar la cobertura temática o geográfica, basta con editar estos archiv
 
 ---
 
-## Requisitos
 
-- **Python 3.12**
-- Cuenta de **Google Cloud** con API de Sheets habilitada y archivo de credenciales de cuenta de servicio
-- Token de **DataBursatil** (`DATABURSATIL_TOKEN`) para la API de noticias
-- Acceso de edición al libro de Google Sheets configurado en los scripts
-
-### Instalación
-
-```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-Coloque `credentials.json` en la raíz del proyecto o defina:
-
-```bash
-export GOOGLE_APPLICATION_CREDENTIALS="/ruta/a/credentials.json"
-export DATABURSATIL_TOKEN="su_token"
-```
 
 ### Ejecución local (orden recomendado)
 
@@ -286,17 +275,6 @@ python Construccion_Indice.py
 
 ---
 
-## Dependencias principales
-
-| Paquete | Rol en el pipeline |
-|---------|-------------------|
-| `requests`, `feedparser` | API y feeds RSS |
-| `gspread`, `pandas` | Lectura/escritura en Google Sheets |
-| `transformers`, `torch` | Tokenización y modelo de sentimiento |
-
-`requirements.txt` instala **PyTorch CPU** (sin CUDA), adecuado para GitHub Actions.
-
----
 
 ## Notas de diseño
 
@@ -307,6 +285,3 @@ python Construccion_Indice.py
 
 ---
 
-## Contexto del proyecto
-
-Desarrollo en el marco del **índice de sentimiento derivado de noticias** (consultoría CIMAT / INEGI). El repositorio implementa la cadena operativa desde la fuente periodística hasta indicadores diarios y mensuales listos para análisis posterior.
