@@ -1,5 +1,7 @@
 # Dependencias directas del pipeline en GitHub Actions.
-# pip instala el resto (google-*, huggingface_hub, tokenizers, numpy, etc.).
+# torch CPU (sin CUDA): índice PyTorch CPU + PyPI para el resto.
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
 feedparser==6.0.12
 gspread==6.2.1
 pandas==3.0.2
