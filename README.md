@@ -9,36 +9,69 @@ Pipeline automatizado para **recolectar**, **filtrar**, **clasificar** y **agreg
 El sistema consta de cuatro etapas secuenciales. Cada script lee y escribe hojas específicas en un mismo libro de Google Sheets.
 
 ```mermaid
-flowchart LR
-    subgraph Fuentes
-        A[DataBursatil API]
-        B[RSS El Economista]
-        C[RSS Reforma]
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontFamily': 'Segoe UI, system-ui, sans-serif',
+    'fontSize': '14px',
+    'lineColor': '#144682',
+    'primaryTextColor': '#144682',
+    'edgeLabelBackground': '#f4f4f5'
+  },
+  'flowchart': {
+    'curve': 'basis',
+    'padding': 20,
+    'nodeSpacing': 30,
+    'rankSpacing': 50
+  }
+}}%%
+flowchart TB
+    subgraph Fuentes["Fuentes"]
+        direction LR
+        A["DataBursatil API"]
+        B["RSS El Economista"]
+        C["RSS Reforma"]
     end
 
     subgraph Etapa1["1. Recolección"]
-        R[Recoleccion_Noticias.py]
+        R["Recoleccion_Noticias.py"]
     end
 
     subgraph Etapa2["2. Preprocesamiento"]
-        P[Preprocesamiento_Noticias.py]
+        P["Preprocesamiento_Noticias.py"]
     end
 
     subgraph Etapa3["3. Sentimiento"]
-        S[Sentiment_Score.py]
+        S["Sentiment_Score.py"]
     end
 
     subgraph Etapa4["4. Índice"]
-        I[Construccion_Indice.py]
+        I["Construccion_Indice.py"]
     end
+
+    OUT["Índices agregados"]
 
     A --> R
     B --> R
     C --> R
-    R -->|noticias_raw| P
-    P -->|noticias / noticias_80tokens| S
-    S -->|noticias_con_sentimiento| I
-    I -->|indice_diario / indice_mensual| OUT[Índices agregados]
+    R -->|"noticias_raw"| P
+    P -->|"noticias / noticias_80tokens"| S
+    S -->|"noticias_con_sentimiento"| I
+    I -->|"indice_diario / indice_mensual"| OUT
+
+    classDef fuente fill:#a15574,stroke:#8a4460,color:#ffffff,stroke-width:2px
+    classDef etapa fill:#144682,stroke:#0f3a66,color:#ffffff,stroke-width:2px
+    classDef salida fill:#144682,stroke:#a15574,color:#ffffff,stroke-width:3px
+
+    class A,B,C fuente
+    class R,P,S,I etapa
+    class OUT salida
+
+    style Fuentes fill:#ececed,stroke:#bcbcbd,stroke-width:2px,color:#144682
+    style Etapa1 fill:#ececed,stroke:#bcbcbd,stroke-width:2px,color:#144682
+    style Etapa2 fill:#ececed,stroke:#bcbcbd,stroke-width:2px,color:#144682
+    style Etapa3 fill:#ececed,stroke:#bcbcbd,stroke-width:2px,color:#144682
+    style Etapa4 fill:#ececed,stroke:#bcbcbd,stroke-width:2px,color:#144682
 ```
 
 | Etapa | Script | Frecuencia (Actions) | Hoja principal de salida |
