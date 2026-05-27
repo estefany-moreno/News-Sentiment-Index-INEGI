@@ -42,6 +42,11 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/credentials.json
         run: python Sentiment_Score.py
 
+      - name: Ejecutar construccion del indice
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/credentials.json
+        run: python Construccion_Indice.py
+
       - name: Mostrar resumen
         if: always()
         run: echo "Ejecucion terminada"
