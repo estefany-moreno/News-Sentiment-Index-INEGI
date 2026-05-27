@@ -1,0 +1,42 @@
+name: Preprocesamiento Noticias (domingos)
+
+on:
+  # GitHub Actions usa cron en UTC (dia de semana: 0=domingo, 1=lunes).
+  # 12:00 PM domingo Monterrey (UTC-6) -> 18:00 UTC domingo
+  # 06:00 PM domingo Monterrey (UTC-6) -> 00:00 UTC lunes
+  # Si tu zona cambia por DST (UTC-5), ajusta: 17:00 UTC domingo y 23:00 UTC domingo.
+  schedule:
+    - cron: "0 18 * * 0"
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  preprocesar_noticias:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Crear credentials.json
+        run: |
+          printf '%s' '${{ secrets.GOOGLE_CREDENTIALS_JSON }}' > credentials.json
+
+      - name: Ejecutar preprocesamiento de noticias
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/credentials.json
+        run: python Preprocesamiento_Noticias.py
+
+      - name: Mostrar resumen
+        if: always()
+        run: echo "Ejecucion terminada"
