@@ -2,6 +2,8 @@
 Noticias_RSS/
 Noticias_APIs/
 all_requirements.txt
+# Caché de modelos Hugging Face (volumen de Docker)
+.hf_cache/
 # Secrets (no versionar)
 ../Secrets/
 **/Secrets/

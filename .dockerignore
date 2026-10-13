@@ -1,0 +1,19 @@
+# Entornos y cachés locales
+.venv/
+__pycache__/
+**/__pycache__/
+.hf_cache/
+
+# Notebooks y datos de análisis (no los usa el pipeline productivo)
+*.ipynb
+*.csv
+
+# Secretos y metadatos (no deben entrar a la imagen)
+credentials.json
+.git/
+.gitignore
+.DS_Store
+
+# Carpetas de salidas locales
+Noticias_RSS/
+Noticias_APIs/

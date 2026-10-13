@@ -1,0 +1,30 @@
+# Dos servicios que replican las dos cadencias de GitHub Actions:
+#   - recoleccion: solo la Etapa 1 (varias veces al día).
+#   - indice: Etapas 2 -> 3 -> 4 (bloque dominical).
+#
+# Uso:
+#   export DATABURSATIL_TOKEN="su_token"
+#   docker compose run --rm recoleccion
+#   docker compose run --rm indice
+#
+# Requiere credentials.json en la raíz del proyecto (se monta solo lectura).
+services:
+  recoleccion:
+    build: .
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/credentials.json
+      DATABURSATIL_TOKEN: ${DATABURSATIL_TOKEN:-}
+    volumes:
+      - ./credentials.json:/secrets/credentials.json:ro
+      - ./.hf_cache:/models
+    command: python Recoleccion_Noticias.py
+
+  indice:
+    build: .
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/credentials.json
+      DATABURSATIL_TOKEN: ${DATABURSATIL_TOKEN:-}
+    volumes:
+      - ./credentials.json:/secrets/credentials.json:ro
+      - ./.hf_cache:/models
+    command: bash -lc "python Preprocesamiento_Noticias.py && python Sentiment_Score.py && python Construccion_Indice.py"
